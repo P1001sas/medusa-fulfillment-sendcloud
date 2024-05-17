@@ -30,6 +30,9 @@
     "build": "tsc -p ./tsconfig.server.json && medusa-admin bundle",
     "watch": "tsc --watch"
   },
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/p1001/medusa-fulfillment-sendcloud.git"
