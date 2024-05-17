@@ -10,9 +10,6 @@ on:
 jobs:
   publish-gpr:
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: "./packages/client"
     permissions:
       packages: write
       contents: write
