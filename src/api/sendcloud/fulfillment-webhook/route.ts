@@ -5,8 +5,7 @@ export const POST = async (req: MedusaRequest, res: MedusaResponse) => {
   const sendcloudFulfillmentService: SendcloudFulfillmentService =
     req.scope.resolve("sendcloudFulfillmentService");
 
-  const payload = req.body;
-
+  const payload: any = req.body;
   switch (payload.action) {
     case "integration_connected":
       console.log("A new integration is added to your SendCloud Account");
