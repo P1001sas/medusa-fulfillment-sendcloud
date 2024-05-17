@@ -36,13 +36,13 @@
     "react-router-dom": "^6.13.0"
   },
   "dependencies": {
-    "@medusajs/admin": "7.1.14",
+    "@medusajs/admin": "7.1.11",
     "@medusajs/cache-inmemory": "^1.8.10",
     "@medusajs/cache-redis": "^1.9.0",
     "@medusajs/event-bus-local": "^1.9.8",
     "@medusajs/event-bus-redis": "^1.8.11",
     "@medusajs/file-local": "^1.0.3",
-    "@medusajs/medusa": "1.20.6",
+    "@medusajs/medusa": "1.20.4",
     "@tanstack/react-query": "5.20.1",
     "axios": "^1.6.7",
     "body-parser": "^1.20.2",
