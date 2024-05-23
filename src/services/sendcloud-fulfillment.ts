@@ -4,6 +4,7 @@ import {
   Fulfillment,
   LineItem,
   Order,
+  ShippingOption,
 } from "@medusajs/medusa";
 import { MedusaContainer } from "@medusajs/types";
 import axios from "axios";
@@ -11,21 +12,10 @@ import axios from "axios";
 class SendcloudFulfillmentService extends AbstractFulfillmentService {
   static identifier = "sendcloud-fulfillment";
   protected readonly options_: { token: any };
-  protected readonly orderService_: {
-    retrieve: (
-      arg0: any,
-      arg1: { select: string[]; relations: string[] }
-    ) => any;
-  };
 
-  constructor(
-      container: MedusaContainer,
-      { orderService }: any,
-      options: { token: any }
-  ) {
+  constructor(container: MedusaContainer, config: { token: any }) {
     super(container as unknown as Record<string, unknown>);
-    this.orderService_ = orderService;
-    this.options_ = options;
+    this.options_ = config;
   }
 
   // This method is used when retrieving the list of fulfillment options available in a region
@@ -33,18 +23,25 @@ class SendcloudFulfillmentService extends AbstractFulfillmentService {
   // These methods appears in medusa admin -> regions -> select fulfillment provider
   async getFulfillmentOptions(): Promise<any[]> {
     const shippingOptionsData = await this.getShippingMethods();
-
-    return shippingOptionsData.shipping_methods;
+    //transform the data to the format that medusa expects
+    //transform object to array
+    const shippingOptions = Object.values(shippingOptionsData);
+    return shippingOptions;
   }
 
   // Method is called when a shipping method is created.
   // To validate the selected shipping method from admin panel
   async validateOption(data: { [x: string]: unknown }): Promise<boolean> {
     const shippingOptionsData = await this.getShippingMethods();
-    const isOptionValid = shippingOptionsData.shipping_methods.some(
-      (shippingMethod) => shippingMethod.id == data.id
-    );
-    return isOptionValid;
+    const shippingOptions: ShippingOption[] =
+      Object.values(shippingOptionsData);
+
+    for (const shippingMethod of shippingOptions) {
+      if (shippingMethod.id === data.id) {
+        return true;
+      }
+    }
+    return false;
   }
 
   // This method is called when a shipping method is created. This typically happens when the customer chooses a shipping option during checkout.
@@ -249,7 +246,7 @@ class SendcloudFulfillmentService extends AbstractFulfillmentService {
     // TODO; Create a Return Portal on SENDCLOUD
     // Call API https://panel.sendcloud.sc/api/v2/brand/{brand_domain}/return-portal/incoming
     // sc_return payload to be sent in body in above API to create a return
-    let orderId;
+    /*let orderId;
     if (returnOrder.order_id) {
       orderId = returnOrder.order_id;
     } else if (returnOrder.swap) {
@@ -335,7 +332,8 @@ class SendcloudFulfillmentService extends AbstractFulfillmentService {
       },
     };
     await axios.request(Options);
-    return sc_return;
+    return sc_return;*/
+    return null;
   }
 
   // This methods used to retrieve any documents associated with a fulfillment.
@@ -363,7 +361,7 @@ class SendcloudFulfillmentService extends AbstractFulfillmentService {
     const shippingMethodsOptions = {
       method: "GET",
       url: "https://panel.sendcloud.sc/api/v2/shipping_methods",
-      params: { to_country: "NL" },
+      params: { to_country: "FR" },
       headers: {
         "X-Requested-With": "",
         Accept: "application/json",
@@ -376,7 +374,7 @@ class SendcloudFulfillmentService extends AbstractFulfillmentService {
     const returnShippingMethodsOptions = {
       method: "GET",
       url: "https://panel.sendcloud.sc/api/v2/shipping_methods",
-      params: { to_country: "NL", is_return: true },
+      params: { to_country: "FR", is_return: true },
       headers: {
         "X-Requested-With": "",
         Accept: "application/json",
@@ -411,7 +409,7 @@ class SendcloudFulfillmentService extends AbstractFulfillmentService {
     const Options = {
       method: "POST",
       url: `https://panel.sendcloud.sc/api/v2/parcels/${id}`,
-      params: { to_country: "NL" },
+      params: { to_country: "FR" },
       headers: {
         "X-Requested-With": "",
         Accept: "application/json",
