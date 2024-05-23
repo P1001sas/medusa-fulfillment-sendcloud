@@ -71,8 +71,8 @@ class SendcloudFulfillmentService extends AbstractFulfillmentService {
       const { quantity, unit_price } = item;
 
       const extractedProperties = {
-        description: `${title} - ${description}`,
-        weight: weight,
+        description: `${title}`,
+        weight: weight / 1000,
         properties: {
           title: title,
         },
@@ -89,6 +89,7 @@ class SendcloudFulfillmentService extends AbstractFulfillmentService {
       order.shipping_address.first_name +
       " " +
       order.shipping_address.last_name;
+    const company_name = order.shipping_address.company;
     const city = order.shipping_address.city;
     const address = order.shipping_address.address_1;
     const postalCode = order.shipping_address.postal_code;
@@ -109,6 +110,7 @@ class SendcloudFulfillmentService extends AbstractFulfillmentService {
     const { parcel } = await this.createParcel(
       parcelItems,
       customer_name,
+      company_name,
       city,
       address,
       postalCode,
@@ -512,6 +514,7 @@ class SendcloudFulfillmentService extends AbstractFulfillmentService {
   async createParcel(
     parcelItems: any[],
     customer_name: string,
+    company_name: string,
     customer_city: string,
     customer_address: string,
     postalCode: string,
@@ -535,6 +538,7 @@ class SendcloudFulfillmentService extends AbstractFulfillmentService {
       data: {
         parcel: {
           name: customer_name,
+          company_name,
           address: customer_address,
           city: customer_city,
           postal_code: postalCode,
