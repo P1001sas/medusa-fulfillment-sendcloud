@@ -65,7 +65,8 @@ class SendcloudFulfillmentService extends AbstractFulfillmentService {
   ): Promise<{ [x: string]: unknown }> {
     const parcelItems = [];
     items.forEach((item) => {
-      const { id, title, hs_code, weight, origin_country } = item.variant;
+      const { id, hs_code, weight, origin_country } = item.variant;
+      const { title } = item.variant.product;
 
       const { quantity, unit_price } = item;
 
