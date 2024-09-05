@@ -238,6 +238,8 @@ class SendcloudFulfillmentService extends AbstractFulfillmentService {
   // Used to determine whether a shipping option is calculated dynamically or flat rate.
   async canCalculate(data: { [x: string]: unknown }): Promise<boolean> {
     const shippingOptionsData = await this.getShippingMethods();
+    console.log("shippingopriondata", shippingOptionsData);
+    console.log("data", data);
     const isCalculateValid = shippingOptionsData.shipping_methods.some(
       (shippingMethod) => shippingMethod.id == data.id
     );
