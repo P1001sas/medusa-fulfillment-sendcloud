@@ -245,6 +245,12 @@ class SendcloudFulfillmentService extends AbstractFulfillmentService {
     if (typeof data.id === "number") {
       id = data.id;
     }
+    console.log("id", id);
+    console.log("shippingOptionsData[id]", shippingOptionsData[id]);
+    console.log(
+      "shippingOptionsData[id].max_weight",
+      shippingOptionsData[id].max_weight
+    );
     const isCalculateValid = shippingOptionsData[id].max_weight;
     return isCalculateValid;
   }
