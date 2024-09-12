@@ -555,7 +555,7 @@ class SendcloudFulfillmentService extends AbstractFulfillmentService {
           postal_code: postalCode,
           country: customer_country,
           parcel_items: parcelItems,
-          request_label: true,
+          request_label: false,
           order_number,
           shipping_method_checkout_name,
           shipment,
@@ -566,6 +566,8 @@ class SendcloudFulfillmentService extends AbstractFulfillmentService {
         },
       },
     };
+
+    console.log("options", options);
 
     try {
       const { data } = await axios.request(options);
