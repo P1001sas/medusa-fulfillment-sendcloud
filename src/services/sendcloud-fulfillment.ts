@@ -98,8 +98,6 @@ class SendcloudFulfillmentService extends AbstractFulfillmentService {
     const customer_phone = order.billing_address.phone;
     const customer_email = order.email;
     const order_number = order.display_id;
-    const shipping_method_checkout_name = order.shipping_methods[0]
-      .shipping_option.data.name as string;
 
     const options = {
       method: "GET",
@@ -116,17 +114,24 @@ class SendcloudFulfillmentService extends AbstractFulfillmentService {
     //find in the shipping methods the one that matches the weight of the cart and the carrier colissimo
     const matchingShippingMethod = shippingData.data.shipping_methods.find(
       (shippingMethod) =>
-        shippingMethod.carrier === "colissimo" &&
+        shippingMethod.carrier ===
+          order.shipping_methods[0].shipping_option.data.carrier &&
         shippingMethod.min_weight <= parcelWeight / 1000 &&
         shippingMethod.max_weight >= parcelWeight / 1000
     );
 
+    console.log(
+      "carrier",
+      order.shipping_methods[0].shipping_option.data.carrier
+    );
     console.log("parcelWeight", parcelWeight / 1000);
     console.log("matchingShippingMethod", matchingShippingMethod);
 
     const shipment = {
       id: matchingShippingMethod.id as number,
     };
+    const shipping_method_checkout_name = order.shipping_methods[0]
+      .shipping_option.data.carrier as string;
 
     const house_number = order.shipping_address.address_2;
 
@@ -146,7 +151,8 @@ class SendcloudFulfillmentService extends AbstractFulfillmentService {
       customer_phone,
       customer_email,
       external_reference,
-      house_number
+      house_number,
+      parcelWeight
     );
     return parcel;
   }
@@ -561,7 +567,8 @@ class SendcloudFulfillmentService extends AbstractFulfillmentService {
     customer_phone: string,
     customer_email: string,
     external_reference: string,
-    house_number: string
+    house_number: string,
+    parcelWeight: number
   ) {
     const options = {
       method: "POST",
@@ -588,6 +595,7 @@ class SendcloudFulfillmentService extends AbstractFulfillmentService {
           email: customer_email,
           external_reference,
           house_number,
+          weight: parcelWeight / 1000,
         },
       },
     };
