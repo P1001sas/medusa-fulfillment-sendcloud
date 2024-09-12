@@ -570,6 +570,9 @@ class SendcloudFulfillmentService extends AbstractFulfillmentService {
     house_number: string,
     parcelWeight: number
   ) {
+    //create a const as string for the weight
+    const weightNumber = parcelWeight / 1000;
+    const weight = weightNumber.toString();
     const options = {
       method: "POST",
       url: "https://panel.sendcloud.sc/api/v2/parcels",
@@ -595,7 +598,7 @@ class SendcloudFulfillmentService extends AbstractFulfillmentService {
           email: customer_email,
           external_reference,
           house_number,
-          weight: parcelWeight / 1000,
+          weight,
         },
       },
     };
