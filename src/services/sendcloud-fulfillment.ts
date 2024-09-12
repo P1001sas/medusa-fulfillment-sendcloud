@@ -64,12 +64,13 @@ class SendcloudFulfillmentService extends AbstractFulfillmentService {
     fulfillment: Fulfillment
   ): Promise<{ [x: string]: unknown }> {
     const parcelItems = [];
+    let parcelWeight = 0;
     items.forEach((item) => {
       const { id, hs_code, weight, origin_country } = item.variant;
       const { title } = item.variant.product;
 
       const { quantity, unit_price } = item;
-
+      parcelWeight += weight * quantity;
       const extractedProperties = {
         description: `${title}`,
         weight: weight / 1000,
@@ -99,8 +100,32 @@ class SendcloudFulfillmentService extends AbstractFulfillmentService {
     const order_number = order.display_id;
     const shipping_method_checkout_name = order.shipping_methods[0]
       .shipping_option.data.name as string;
+
+    const options = {
+      method: "GET",
+      url: "https://panel.sendcloud.sc/api/v2/shipping_methods?sender_address=512278&to_country=FR",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+        Authorization: `Basic ${this.options_.token}`,
+      },
+    };
+
+    const shippingData = await axios.request(options);
+
+    //find in the shipping methods the one that matches the weight of the cart and the carrier colissimo
+    const matchingShippingMethod = shippingData.data.find(
+      (shippingMethod) =>
+        shippingMethod.carrier === "colissimo" &&
+        shippingMethod.min_weight <= parcelWeight &&
+        shippingMethod.max_weight >= parcelWeight
+    );
+
+    console.log("parcelWeight", parcelWeight);
+    console.log("matchingShippingMethod", matchingShippingMethod);
+
     const shipment = {
-      id: order.shipping_methods[0].shipping_option.data.id as number,
+      id: matchingShippingMethod.id as number,
     };
 
     const house_number = order.shipping_address.address_2;
