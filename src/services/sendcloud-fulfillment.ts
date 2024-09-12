@@ -114,7 +114,7 @@ class SendcloudFulfillmentService extends AbstractFulfillmentService {
     const shippingData = await axios.request(options);
 
     //find in the shipping methods the one that matches the weight of the cart and the carrier colissimo
-    const matchingShippingMethod = shippingData.data.find(
+    const matchingShippingMethod = shippingData.data.shipping_methods.find(
       (shippingMethod) =>
         shippingMethod.carrier === "colissimo" &&
         shippingMethod.min_weight <= parcelWeight &&
