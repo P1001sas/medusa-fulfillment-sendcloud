@@ -117,11 +117,11 @@ class SendcloudFulfillmentService extends AbstractFulfillmentService {
     const matchingShippingMethod = shippingData.data.shipping_methods.find(
       (shippingMethod) =>
         shippingMethod.carrier === "colissimo" &&
-        shippingMethod.min_weight <= parcelWeight &&
-        shippingMethod.max_weight >= parcelWeight
+        shippingMethod.min_weight <= parcelWeight / 1000 &&
+        shippingMethod.max_weight >= parcelWeight / 1000
     );
 
-    console.log("parcelWeight", parcelWeight);
+    console.log("parcelWeight", parcelWeight / 1000);
     console.log("matchingShippingMethod", matchingShippingMethod);
 
     const shipment = {
