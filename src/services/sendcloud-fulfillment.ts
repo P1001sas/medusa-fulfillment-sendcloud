@@ -126,10 +126,16 @@ class SendcloudFulfillmentService extends AbstractFulfillmentService {
     );
     console.log("parcelWeight", parcelWeight / 1000);
     console.log("matchingShippingMethod", matchingShippingMethod);
+    console.log(
+      "shipment before",
+      order.shipping_methods[0].shipping_option.data.id
+    );
 
     const shipment = {
       id: matchingShippingMethod.id as number,
     };
+
+    console.log("shipment after", shipment);
     const shipping_method_checkout_name = order.shipping_methods[0]
       .shipping_option.data.carrier as string;
 
