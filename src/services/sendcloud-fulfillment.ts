@@ -130,6 +130,12 @@ class SendcloudFulfillmentService extends AbstractFulfillmentService {
       "shipment before",
       order.shipping_methods[0].shipping_option.data.id
     );
+    console.log(
+      "servicePointCode",
+      order.shipping_methods[0].shipping_option.data.code
+    );
+    const toServicePoint = order.shipping_methods[0].shipping_option.data
+      .code as string;
 
     const shipment = {
       id: matchingShippingMethod.id as number,
@@ -158,7 +164,8 @@ class SendcloudFulfillmentService extends AbstractFulfillmentService {
       customer_email,
       external_reference,
       house_number,
-      parcelWeight
+      parcelWeight,
+      toServicePoint
     );
     return parcel;
   }
@@ -574,7 +581,8 @@ class SendcloudFulfillmentService extends AbstractFulfillmentService {
     customer_email: string,
     external_reference: string,
     house_number: string,
-    parcelWeight: number
+    parcelWeight: number,
+    to_service_point: string
   ) {
     //create a const as string for the weight
     const weightNumber = parcelWeight / 1000;
@@ -605,6 +613,7 @@ class SendcloudFulfillmentService extends AbstractFulfillmentService {
           external_reference,
           house_number,
           weight,
+          to_service_point,
         },
       },
     };
