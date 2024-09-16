@@ -137,8 +137,12 @@ class SendcloudFulfillmentService extends AbstractFulfillmentService {
       "shippingmethodData",
       JSON.stringify(order.shipping_methods[0].data)
     );
-    console.log("servicePointCode", order.shipping_methods[0].data.code);
-    const toServicePoint = order.shipping_methods[0].data.code as string;
+    console.log(
+      "servicePointCode",
+      order.shipping_methods[0].data.service_point_id
+    );
+    const toServicePoint = order.shipping_methods[0].data
+      .service_point_id as string;
 
     const shipment = {
       id: matchingShippingMethod.id as number,
